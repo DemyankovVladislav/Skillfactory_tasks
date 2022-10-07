@@ -1,0 +1,32 @@
+---
+- name: Setup Mysql
+  hosts: localhost
+  become: True
+  tasks:
+    - name: Installing Mysql and dependencies
+      apt:
+       update_cache: yes
+       pkg:
+         - mysql-server
+         - mysql-client
+         - python3-mysqldb
+         - libmysqlclient-dev
+
+    - name: Start and enable mysql service
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+
+    - name: Creating mysql user
+      mysql_user:
+        name: test
+        password: 1234
+        priv: '*.*:ALL'
+        host: '%'
+        state: present
+
+    - name: Creating db
+      mysql_db:
+        name: testdb
+        state: present

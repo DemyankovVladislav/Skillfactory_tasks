@@ -1,0 +1,35 @@
+---
+- hosts: localhost
+  become: True
+  tasks:
+    - name: Install a list of packages
+      apt:
+        update_cache: yes
+        pkg:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+
+    - name: Add key and repo Docker
+      block:
+        - name: Add key
+          get_url:
+            url: https://download.docker.com/linux/ubuntu/gpg
+            dest: /etc/apt/trusted.gpg.d/docker.asc
+
+        - name: Add repo
+          apt_repository:
+            repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+            state: present
+
+    - name: Install Docker
+      apt:
+        update_cache: yes
+        name: docker-ce
+        state: present
+
+    - name: Make sure a service Docker is running
+      systemd:
+        state: started
+        name: docker

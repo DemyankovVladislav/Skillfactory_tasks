@@ -1,0 +1,38 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Copy key
+      copy:
+       src: ~/.ssh/id_rsa.pub
+       dest:  ~/ansible/id_rsa.pub
+
+    - name: Encrypt key
+      shell:
+        cmd: ansible-vault encrypt id_rsa.pub --vault-password-file .ansible_pass.txt
+        chdir: ~/ansible/
+
+- hosts: remote_test
+  become: True
+  vars:
+    username: user1
+    mydir: /home/user1/.ssh
+  tasks:
+    - name: Add the user user1
+      user:
+        name: "{{ username }}"
+
+    - name: Create a directory
+      file:
+        path: "{{ mydir }}"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: '0700'
+
+    - name: Copy file with owner and permissions
+      copy:
+        src: id_rsa.pub
+        dest: "{{ mydir }}/id_rsa.pub"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: '0600'

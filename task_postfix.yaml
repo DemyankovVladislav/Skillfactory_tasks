@@ -1,0 +1,22 @@
+---
+- hosts: remote_test
+  become: True
+  tasks:
+    - name: Remove postfix
+      yum:
+        name: postfix
+        state: absent
+      tags: drop postfix
+
+    - name: Install postfix
+      yum:
+        name: postfix
+        state: present
+      tags: init postfix
+
+    - name: Enable and run postfix
+      service:
+        name: postfix
+        state: started
+        enabled: yes
+      tags: init postfix

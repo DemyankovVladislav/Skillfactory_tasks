@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  gather_facts: False
+  become: True
+  roles:
+    - vsftpd 

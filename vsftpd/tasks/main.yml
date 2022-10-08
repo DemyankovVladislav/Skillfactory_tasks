@@ -1,0 +1,15 @@
+---
+- name: Install vsftpd
+  apt:
+    name: vsftpd
+    state: present 
+
+- name: Change default config
+  copy:
+    src:  vsftpd.conf
+    dest: /etc/vsftpd.conf
+    owner: root
+    group: root
+    mode: '0644'  
+  notify:
+    - Restart vsftpd

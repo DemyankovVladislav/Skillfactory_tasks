@@ -1,0 +1,6 @@
+---
+- hosts: remote_test
+  gather_facts: False
+  become: True
+  roles:
+    - nginx_phpfpm 

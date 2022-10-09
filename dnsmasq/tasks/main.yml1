@@ -1,0 +1,44 @@
+---
+- name: Install a list of packages
+  yum: pkg={{ item }} state=present
+  loop:
+    - bind-utils
+    - dnsmasq
+
+- name: Copy file dnsmasq.conf
+  copy:
+    src: dnsmasq.conf
+    dest: /etc/dnsmasq.conf
+    owner: root
+    group: root
+    mode: '0644'
+    
+- name: Copy file resolv.dnsmasq
+  copy:
+    src: resolv.dnsmasq
+    dest: /etc/resolv.dnsmasq
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy file NetworkManager.conf
+  copy:
+    src: NetworkManager.conf
+    dest: /etc/NetworkManager/NetworkManager.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy file resolv.conf
+  copy:
+    src: resolv.conf
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Start and enable service dnsmasq
+  service:
+    name: dnsmasq
+    state: restarted
+    enabled: yes

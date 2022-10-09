@@ -1,0 +1,33 @@
+---
+- hosts: remote_test
+  become: true
+  gather_facts: False
+  tasks:
+    - name: Ensure group "superusers" exists
+      group:
+        name: superusers
+        state: present
+
+    - name: Create users
+      user:
+        name: "{{ item }}"
+      loop:
+        - user2
+        - user3
+
+    - name: Add users to a group "superusers"
+      user:
+        name: "{{ item }}"
+        groups: superusers
+        append: yes
+      loop:
+        - user2
+        - user3
+
+    - name: Validate the sudoers file before saving
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        line: '%superusers ALL=(ALL) NOPASSWD: ALL'
+        validate: /usr/sbin/visudo -cf %s
+

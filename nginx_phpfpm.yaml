@@ -3,4 +3,4 @@
   gather_facts: False
   become: True
   roles:
-    - nginx_phpfpm 
+    - roles/nginx_phpfpm 

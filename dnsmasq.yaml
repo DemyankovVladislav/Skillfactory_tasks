@@ -3,4 +3,4 @@
   gather_facts: False
   become: True
   roles:
-    - dnsmasq 
+    - roles/dnsmasq 

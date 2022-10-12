@@ -1,0 +1,12 @@
+---
+- hosts: centos
+  become: yes
+  roles:
+   - users
+   - php  
+
+- hosts: localhost
+  become: yes
+  roles:
+   - users
+   - http

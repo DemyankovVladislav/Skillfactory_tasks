@@ -18,12 +18,3 @@
     name: nginx
     state: started
     enabled: yes
-
-#- name: Copy file default for nginx
-#  template:
-#    src: default.j2
-#    dest: /etc/nginx/sites-available/default
-#    owner: root
-#    group: root
-#    mode: '0644'
-#  notify: Restart nginx

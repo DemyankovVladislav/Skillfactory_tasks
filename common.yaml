@@ -2,11 +2,11 @@
 - hosts: centos
   become: yes
   roles:
-   - users
-   - php  
+   - roles/users
+   - roles/php  
 
 - hosts: localhost
   become: yes
   roles:
-   - users
-   - http
+   - roles/users
+   - roles/http

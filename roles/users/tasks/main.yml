@@ -1,0 +1,26 @@
+---
+- name: Create user "{{ user }}" for RedHat
+  user:
+    name: "{{ user }}"
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+    groups: wheel
+    append: yes
+  when: ansible_os_family == "RedHat"
+
+- name: Create user "{{ user }}" for Debian
+  user:
+    name: "{{ user }}"
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+    groups: sudo
+    append: yes
+  when: ansible_os_family == "Debian"
+
+- name: Install authorized key from file "id_rsa.pub" for user "{{ user }}"
+  authorized_key:
+    user: "{{ user }}"
+    state: present
+    key: "{{ lookup('file', '/home/devops/.ssh/id_rsa.pub') }}"

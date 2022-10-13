@@ -4,6 +4,14 @@
     pkg: nginx
     state: present
 
+- name: create index.php
+  copy: 
+      content: <?php phpinfo();?>
+      dest: /var/www/html/index.php
+      owner: root
+      group: root
+      mode: 0644
+
 - name: Copy file default for nginx
   template:
     src: default.j2

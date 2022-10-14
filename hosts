@@ -1,0 +1,15 @@
+[app]
+vm2 ansible_host=10.128.0.4
+vm3 ansible_host=10.128.0.33
+
+[web]
+vm1 ansible_host=10.128.0.10
+
+[database]
+vm1 ansible_host=10.128.0.10
+
+
+[database:vars]
+version=13
+path=/tmp
+

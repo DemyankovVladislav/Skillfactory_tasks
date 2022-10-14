@@ -1,0 +1,113 @@
+---
+- hosts: app
+  become: yes
+  tasks:
+  
+  - block: ##############################UBUNTU#########################
+      
+      - name: Install a list of packages
+        apt:
+          update_cache: yes
+          pkg: "{{ item }}"
+        loop:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+ 
+      - name: Add key
+        get_url:
+          url: https://download.docker.com/linux/ubuntu/gpg
+          dest: /etc/apt/trusted.gpg.d/docker.asc
+       
+      - name: Add repo
+        apt_repository:
+          repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+          state: present
+        
+      - name: Install Docker
+        apt:
+          update_cache: yes
+          name: docker-ce
+          state: present
+
+      - name: Make sure a service Docker is running
+        systemd:
+          state: started
+          name: docker
+          enabled: yes
+
+    when: ansible_os_family == "Debian"
+
+  - block: ##############################CENTOS8#########################
+      - name: Add docker repository
+        get_url:
+          url: https://download.docker.com/linux/centos/docker-ce.repo
+          dest: /etc/yum.repos.d/docer-ce.repo
+     
+      - name: Install docker-ce
+        dnf:
+          update_cache: yes
+          name: docker-ce
+          state: present
+
+      - name: Make sure a service Docker is running
+        systemd:
+          state: started
+          name: docker
+          enabled: yes
+
+    when: ansible_distribution == "CentOS" and ansible_distribution_version == "8" 
+
+      
+- hosts: database
+  become: yes
+  tasks:
+  - name: Add key
+    get_url:
+      url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+      dest: /etc/apt/trusted.gpg.d/postgresql.asc
+
+  - name: Add repo
+    apt_repository:
+      repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/postgresql.asc] http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+      state: present
+
+  - name: Install a list of packages
+    apt:
+      update_cache: yes
+      pkg: "{{ item }}"
+    loop:
+      - python3-psycopg2
+      - postgresql-{{ version }}
+
+
+  - name: Enable Postgresql
+    systemd:
+      name: postgresql
+      enabled: yes
+
+  - name: Change path
+    lineinfile:
+      dest: /etc/postgresql/{{version}}/main/postgresql.conf
+      regexp: '^data_directory\s*='
+      line: data_directory='{{path}}/main'
+      state: present
+    notify: Restart Postgresql
+
+  - name: Copy files db to our data folder
+    shell: sudo cp -rp /var/lib/postgresql/{{version}}/main/ {{path}}
+    notify: Restart Postgresql
+
+  - name: Check our data_directory
+    shell: sudo -u postgres psql -c "SHOW data_directory;"
+    register: output
+
+  - debug:
+      var: output.stdout_lines
+
+  handlers:
+    - name: Restart Postgresql
+      systemd:
+        name: postgresql
+        state: restarted

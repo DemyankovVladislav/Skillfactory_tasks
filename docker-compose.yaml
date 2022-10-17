@@ -1,0 +1,28 @@
+version: '3.2'
+
+services:
+ php:
+   build: php/
+   depends_on:
+     - nginx
+   volumes:
+     - type: bind
+       source: ./www/
+       target: /var/www/
+   healthcheck:
+     test: curl -s http://nginx/ | grep -w "works" || exit 1
+     interval: 1s
+     timeout: 3s
+     retries: 1
+ nginx:
+   image: "nginx:alpine"
+   volumes:
+     - type: bind
+       source: ./www/
+       target: /var/www/
+
+     - type: bind
+       source: ./nginx/
+       target: /etc/nginx/conf.d/
+   ports:
+     - "80:80"

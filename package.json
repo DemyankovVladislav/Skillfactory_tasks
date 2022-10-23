@@ -1,5 +1,5 @@
 {
-  "name": "node",
+  "name": "node_by_vladislav",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,13 +7,16 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
-    "type": "git"
-    "url": "git+https://github.com/DemyankovVladislav/Skillfactory_tasks.git#feature/nodejs"
+    "type": "git",
+    "url": "git+https://github.com/DemyankovVladislav/Skillfactory_tasks/tree/nodejs"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@popperjs/core": "^2.11.6",
     "bootstrap": "^5.2.2",
-    "jquery": "^3.6.1"
+    "core-js": "^3.25.5",
+    "jquery": "^3.6.1",
+    "popper.js": "^1.16.1"
   }
 }

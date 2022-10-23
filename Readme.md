@@ -1,4 +1,4 @@
 Репозиторий для сдачи заданий SkillFactory
 
 
-npm i node_by_vladislav2 для установки пакета.
+npm i node_by_vladislav2 для установки артефакта.

@@ -1,0 +1,31 @@
+groups: 
+- name: example
+  rules:
+  - alert: site_slow
+    expr: sum by (instance) (probe_http_duration_seconds) > 5
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Warning: Site '{{ $labels.instance }}' is very slow(>5s)"
+      description: "Site {{ $labels.instance }} response for {{ humanize $value}}s"
+
+
+  - alert: http_status_code_not_200
+    expr: probe_http_status_code != 200
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Critical: HTTP status code for the site '{{ $labels.instance }}' isn't 200"
+      description: "HTTP status code is {{ $value }}"
+
+
+  - alert: reboot_server
+    expr: sum(time() - node_boot_time_seconds) / 86400 < 150
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Warning: Server reboot '{{ $labels.instance }}'"
+      description: "Reboot was  {{ $value }} ago"

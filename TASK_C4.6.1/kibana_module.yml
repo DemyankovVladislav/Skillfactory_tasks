@@ -1,0 +1,16 @@
+# Module: kibana
+# Docs: https://www.elastic.co/guide/en/beats/filebeat/7.17/filebeat-module-kibana.html
+
+- module: kibana
+  # Server logs
+  log:
+    enabled: true
+    var.paths: ["/var/log/kibana/*.log"]
+
+  # Audit logs
+  audit:
+    enabled: true
+
+    # Set custom paths for the log files. If left empty,
+    # Filebeat will choose the paths depending on your OS.
+    #var.paths:

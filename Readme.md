@@ -1,1 +1,3 @@
-Репозиторий для сдачи заданий SkillFactory
+Terraform+Swarm+Yandex
+
+Директория screens - скрины подтверждения работы

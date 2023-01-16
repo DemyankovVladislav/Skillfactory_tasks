@@ -4,4 +4,4 @@
 
 deploy+pod(nginx)+service+secret
 
-Подтверждение работы ris1
+Подтверждение работы D3.4.JPG
